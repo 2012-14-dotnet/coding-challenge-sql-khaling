@@ -1,0 +1,98 @@
+CREATE SCHEMA Business;
+GO
+
+
+CREATE TABLE Business.Department
+(
+    ID TINYINT NOT NULL IDENTITY(1,1)
+    ,[Name] VARCHAR(100) NOT NULL
+    ,Location VARCHAR (100)
+)
+
+
+CREATE TABLE Business.Employee
+(
+    ID TINYINT NOT NULL IDENTITY(1,1)
+    ,FirstName VARCHAR(100) NOT NULL
+    ,LastName VARCHAR(100)
+    ,SSN VARCHAR(10)
+    ,DeptID TINYINT 
+)
+
+CREATE TABLE Business.EmpDetails
+(
+    ID TINYINT NOT NULL IDENTITY(1,1)
+    ,EmployeeID TINYINT
+    ,Salary NUMERIC
+    ,[Address 1] VARCHAR(100)
+    ,[Address 2] VARCHAR(100)
+    ,City VARCHAR(50)
+    ,[State] VARCHAR(20)
+    ,Country VARCHAR(100)
+)
+
+
+INSERT INTO Business.Department([Name], [Location])
+VALUES('HR', 'Location 1'),
+      ('IT', 'Location 1'),
+      ('PayRoll', 'Location 1')
+
+
+INSERT INTO Business.Employee([FirstName], [LastName], SSN, DeptID)
+VALUES('Nar', 'Rai', '1242342134', 1),
+      ('Simon', 'Rai', '12345678', 2),
+      ('Sunil', 'Thapa', '798739473', 3)
+
+
+
+INSERT INTO Business.EmpDetails([EmployeeID], [Salary], [Address 1], [Address 2], City, [State], Country)
+VALUES('1', 4550, '1049 shire drive', 'apt. D-23', 'Antioch', 'TN', 'US'),
+      ('2', 3500, '124 hickory trace', 'apt. R-4', 'Nashville', 'TN', 'US'),
+      ('3', 5000, '532 W. oak highland', '', 'Antioch', 'TN', 'US')
+
+
+--ALTER
+ALTER TABLE Business.Department
+    ADD CONSTRAINT PK_DeptId PRIMARY KEY CLUSTERED (ID);
+GO
+
+ALTER TABLE Business.Employee
+    ADD CONSTRAINT PK_EmpId PRIMARY KEY CLUSTERED (ID);
+GO
+
+ALTER TABLE Business.EmpDetails
+    ADD CONSTRAINT PK_EmpDetailId PRIMARY KEY CLUSTERED (ID);
+GO
+
+ALTER TABLE Business.Employee
+    ADD CONSTRAINT FK_DeptID FOREIGN KEY (DeptID) REFERENCES Business.Department(ID);
+GO
+
+ALTER TABLE Business.EmpDetails
+    ADD CONSTRAINT FK_EmpId FOREIGN KEY (EmployeeID) REFERENCES Business.Employee(ID);
+GO
+
+INSERT INTO Business.Employee([FirstName], [LastName], SSN, DeptID)
+VALUES('Tina', 'Smith', '627836128', 1)
+ 
+INSERT INTO Business.Department([Name], [Location])
+VALUES('Marketing', 'Location 1')
+      
+SELECT FirstName, LastName FROM Business.Employee as emp
+INNER JOIN Business.Department as dpt
+ON emp.DeptID = dpt.ID
+WHERE dpt.Name = 'Marketing'
+
+SELECT Salary FROM Business.EmpDetails as empD
+INNER JOIN Business.Department as dpt
+ON empD.EmployeeID = dpt.ID
+WHERE dpt.Name = 'Marketing'
+
+SELECT COUNT(*) as empCount, DeptID FROM Business.Employee as emp
+INNER JOIN Business.Department as dpt
+ON emp.DeptID = dpt.ID
+GROUP BY DeptID
+
+INSERT INTO Business.EmpDetails([EmployeeID], [Salary], [Address 1], [Address 2], City, [State], Country)
+VALUES('4', 90000, '104 shire drive', 'apt. D-53', 'Antioch', 'TN', 'US')
+    
